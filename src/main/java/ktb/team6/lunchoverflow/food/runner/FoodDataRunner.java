@@ -45,9 +45,7 @@ public class FoodDataRunner implements CommandLineRunner {
 
                 RestaurantEntity restaurant = restaurantRepository.findByName(restaurantName);
                 if (restaurant == null) {
-                    restaurant = new RestaurantEntity();
-                    restaurant.setName(restaurantName);
-                    restaurant = restaurantRepository.save(restaurant);
+                    restaurant = saveRestaurant(restaurantData);
                 } else {
                     log.info("중복 레스토랑 존재, skip");
                 }
@@ -92,15 +90,32 @@ public class FoodDataRunner implements CommandLineRunner {
         }
     }
 
+    private RestaurantEntity saveRestaurant(Map<String, Object> restaurantData) {
+        RestaurantEntity restaurant = new RestaurantEntity();
+        restaurant.setAddress((String) restaurantData.get("address_name"));
+        restaurant.setName((String) restaurantData.get("name"));
+        restaurant.setDistance(parseDouble(restaurantData.get("distance")));
+        restaurant.setKakaoUrl((String) restaurantData.get("kakao_url"));
+        restaurant.setNaverUrl((String) restaurantData.get("naver_url"));
+        restaurant.setPhone((String) restaurantData.get("phone"));
+        restaurant.setLongitude(parseDouble(restaurantData.get("x")));
+        restaurant.setLatitude(parseDouble(restaurantData.get("y")));
+        restaurant.setCategory((String) restaurantData.get("category"));
+        restaurant.setReviewCount(parseDouble(restaurantData.get("review_num")));
+        restaurant.setReviewScore(parseDouble(restaurantData.get("score")));
+
+        // Address를 도로명 주소로 할 경우
+        //        restaurant.setAddress((String) restaurantData.get("road_address_name"));
+        return restaurantRepository.save(restaurant);
+    }
+
     private Long[] parsePriceRange(String priceString) {
         priceString = priceString.replaceAll("[,원\\s]", "");
         String[] prices = priceString.split("[-~/]");
         if (prices.length == 1) {
-            // 단일 가격
             Long price = Long.parseLong(prices[0].replaceAll("[^0-9]", ""));
             return new Long[]{price, price};
         } else if (prices.length == 2) {
-            // 가격 범위
             Long minPrice = Long.parseLong(prices[0].replaceAll("[^0-9]", ""));
             Long maxPrice = Long.parseLong(prices[1].replaceAll("[^0-9]", ""));
             return new Long[]{minPrice, maxPrice};
@@ -108,4 +123,20 @@ public class FoodDataRunner implements CommandLineRunner {
             throw new NumberFormatException("Invalid price format");
         }
     }
+
+    private double parseDouble(Object value) {
+        if (value instanceof Number) {
+            return ((Number) value).doubleValue();
+        } else if (value instanceof String) {
+            try {
+                return Double.parseDouble((String) value);
+            } catch (NumberFormatException e) {
+                log.warn("유효하지 않은 double 값: {}", value);
+                return 0.0;
+            }
+        }
+        log.warn("예상치 못한 double 타입 값: {}", value);
+        return 0.0;
+    }
+
 }
