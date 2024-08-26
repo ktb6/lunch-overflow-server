@@ -12,3 +12,11 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+
+kakao:
+  api:
+    key: ${KAKAO_API_KEY}
+
+  base:
+    x: 127.1069920
+    y: 37.4003784
