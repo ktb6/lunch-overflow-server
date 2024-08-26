@@ -1,6 +1,7 @@
 package ktb.team6.lunchoverflow.domain.embedded;
 
 import jakarta.persistence.Embeddable;
+import java.util.Arrays;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,10 +25,14 @@ public class Address {
     }
 
     public static Address from(String roadNameAddress) {
+        String[] parts = roadNameAddress.split(" ");
+        String part1 = parts[0] + " " + parts[1];
+        String part2 = parts[2];
+        String part3 = String.join(" ", Arrays.copyOfRange(parts, 3, parts.length));
         return new Address(
-                roadNameAddress.substring(0, 2),
-                roadNameAddress.substring(2, 3),
-                roadNameAddress.substring(3)
+                part1,
+                part2,
+                part3
         );
     }
 
