@@ -34,8 +34,7 @@ public class KakaoApiService {
     private Double longitude;
 
     @Transactional
-    public void foo(int pageNumber) {
-
+    public void getRestaurantsFromCategory(int pageNumber) {
         UriComponentsBuilder uriComponentsBuilder = getDefaultUriBuilder();
 
         URI uri = uriComponentsBuilder.queryParam("page", pageNumber).build().toUri();
@@ -63,6 +62,4 @@ public class KakaoApiService {
                 .queryParam("y", longitude)
                 .queryParam("sort", "distance");
     }
-
-
 }
