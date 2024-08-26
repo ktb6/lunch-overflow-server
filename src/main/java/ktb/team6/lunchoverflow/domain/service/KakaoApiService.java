@@ -21,9 +21,11 @@ import reactor.core.publisher.Mono;
 public class KakaoApiService {
 
     private static final String BASE_URL = "https://dapi.kakao.com/v2/local/search/category.json";
-//    private static final String BASE_URL = "/v2/local/search/category.json";
     private final WebClient kakaoClient;
     private final RestaurantRepository restaurantRepository;
+
+    @Value("${kakao.api.key}")
+    private String key;
 
     @Value("${kakao.base.x}")
     private Double latitude;
@@ -31,27 +33,7 @@ public class KakaoApiService {
     @Value("${kakao.base.y}")
     private Double longitude;
 
-//    @Transactional
-//    public void foo(int pageNumber) {
-//
-//        UriComponentsBuilder uriComponentsBuilder = getDefaultUriBuilder();
-//
-//        URI uri = uriComponentsBuilder.queryParam("page", pageNumber).build().toUri();
-//        log.info("-------- url --------------- {}", uri);
-//
-//        Mono<KakaoRestaurantResponse> responseMono = kakaoClient.get()
-//                .uri(uri)
-//                .retrieve()
-//                .bodyToMono(KakaoRestaurantResponse.class);
-//
-//        responseMono.subscribe(response -> {
-//            List<KakaoPlace> places = response.getDocuments();
-//            restaurantRepository.saveAll(places.stream()
-//                    .map(Restaurant::from)
-//                    .toList());
-//        });
-//    }
-
+    @Transactional
     public void foo(int pageNumber) {
 
         UriComponentsBuilder uriComponentsBuilder = getDefaultUriBuilder();
@@ -61,7 +43,7 @@ public class KakaoApiService {
 
         kakaoClient.get()
                 .uri(uri)
-                .header("Authorization", "KakaoAK 35e4876bc465c3d872cd66eab74d0a2d")
+                .header("Authorization", "KakaoAK " + key)
                 .retrieve()
                 .bodyToMono(KakaoRestaurantResponse.class)
                 .flatMap(response -> {
