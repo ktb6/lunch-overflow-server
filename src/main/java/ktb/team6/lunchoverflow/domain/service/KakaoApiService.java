@@ -61,7 +61,7 @@ public class KakaoApiService {
                 .queryParam("query", keyWord)
                 .queryParam("page", pageNumber)
                 .build().toUri();
-        log.info("ggggg");
+
         kakaoClient.get()
                 .uri(uri)
                 .header("Authorization", "KakaoAK " + key)
