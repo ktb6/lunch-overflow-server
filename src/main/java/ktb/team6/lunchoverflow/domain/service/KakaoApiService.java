@@ -21,6 +21,7 @@ import reactor.core.publisher.Mono;
 public class KakaoApiService {
 
     private static final String BASE_URL = "https://dapi.kakao.com/v2/local/search/category.json";
+    private static final String KEYWORD_URL = "https://dapi.kakao.com/v2/local/search/keyword.json";
     private final WebClient kakaoClient;
     private final RestaurantRepository restaurantRepository;
 
@@ -35,7 +36,7 @@ public class KakaoApiService {
 
     @Transactional
     public void getRestaurantsFromCategory(int pageNumber) {
-        UriComponentsBuilder uriComponentsBuilder = getDefaultUriBuilder();
+        UriComponentsBuilder uriComponentsBuilder = getDefaultUriBuilder(BASE_URL);
 
         URI uri = uriComponentsBuilder.queryParam("page", pageNumber).build().toUri();
         log.info("-------- url --------------- {}", uri);
@@ -53,9 +54,30 @@ public class KakaoApiService {
                 .subscribe();
     }
 
+    @Transactional
+    public void getRestaurantsFromKeyWord(String keyWord, int pageNumber) {
+        UriComponentsBuilder defaultUriBuilder = getDefaultUriBuilder(KEYWORD_URL);
+        URI uri = defaultUriBuilder
+                .queryParam("query", keyWord)
+                .queryParam("page", pageNumber)
+                .build().toUri();
+        log.info("ggggg");
+        kakaoClient.get()
+                .uri(uri)
+                .header("Authorization", "KakaoAK " + key)
+                .retrieve()
+                .bodyToMono(KakaoRestaurantResponse.class)
+                .flatMap(response -> {
+                    List<KakaoPlace> places = response.getDocuments();
+                    log.info("places.size(): {}", places.size());
+                    return Mono.fromRunnable(() -> restaurantRepository.saveAll(
+                            places.stream().map(Restaurant::from).toList()));
+                })
+                .subscribe();
+    }
 
-    private UriComponentsBuilder getDefaultUriBuilder() {
-        return UriComponentsBuilder.fromUriString(BASE_URL)
+    private UriComponentsBuilder getDefaultUriBuilder(String url) {
+        return UriComponentsBuilder.fromUriString(url)
                 .queryParam("category_group_code", "FD6")
                 .queryParam("radius", 1000)
                 .queryParam("x", latitude)
