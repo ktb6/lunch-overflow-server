@@ -7,11 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "restaurant")
 public class RestaurantEntity {
 
