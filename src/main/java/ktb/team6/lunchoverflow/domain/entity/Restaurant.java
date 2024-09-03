@@ -1,14 +1,16 @@
 package ktb.team6.lunchoverflow.domain.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import ktb.team6.lunchoverflow.domain.embedded.Address;
 import ktb.team6.lunchoverflow.domain.embedded.Location;
+import ktb.team6.lunchoverflow.domain.enums.FoodCategory;
 import ktb.team6.lunchoverflow.domain.service.dto.KakaoPlace;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,18 +42,19 @@ public class Restaurant {
 
     @Embedded
     private Address address;
-    //Todo 추후 Embedded 타입으로 변환 작업 필요
-//    private String address;
 
     @Embedded
     private Location location;
 
-    //Todo 데이터 파싱 후 추후에 수정 필요
-    @Column(name = "category")
-    private String category;
+    @Column(name = "raw_category")
+    private String rawCategory;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "food_category")
+    private FoodCategory foodCategory;
 
     private Restaurant(String name, Long distance, String phone, String url, Long kakaoId, Address address,
-                       Location location, String category) {
+                       Location location, String rawCategory) {
         this.name = name;
         this.distance = distance;
         this.phone = phone;
@@ -59,7 +62,7 @@ public class Restaurant {
         this.kakaoId = kakaoId;
         this.address = address;
         this.location = location;
-        this.category = category;
+        this.rawCategory = rawCategory;
     }
 
     public static Restaurant from(KakaoPlace kakaoPlace) {
@@ -76,5 +79,9 @@ public class Restaurant {
                         .build(),
                 kakaoPlace.getCategory()
         );
+    }
+
+    public void updateFoodCategory(FoodCategory foodCategory) {
+        this.foodCategory = foodCategory;
     }
 }
