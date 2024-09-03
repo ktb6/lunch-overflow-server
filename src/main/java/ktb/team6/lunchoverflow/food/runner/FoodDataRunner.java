@@ -143,5 +143,4 @@ public class FoodDataRunner implements CommandLineRunner {
         log.warn("예상치 못한 double 타입 값: {}", value);
         return 0.0;
     }
-
 }
