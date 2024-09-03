@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import ktb.team6.lunchoverflow.food.entity.FoodEntity;
 import ktb.team6.lunchoverflow.food.entity.RestaurantEntity;
 import ktb.team6.lunchoverflow.food.repository.FoodRepository;
@@ -43,11 +44,14 @@ public class FoodDataRunner implements CommandLineRunner {
                     continue;
                 }
 
-                RestaurantEntity restaurant = restaurantRepository.findByName(restaurantName);
-                if (restaurant == null) {
+                Optional<RestaurantEntity> restaurantOptional = restaurantRepository.findByName(restaurantName);
+
+                RestaurantEntity restaurant;
+                if (restaurantOptional.isEmpty()) {
                     restaurant = saveRestaurant(restaurantData);
                 } else {
                     log.info("중복 레스토랑 존재, skip");
+                    restaurant = restaurantOptional.get();
                 }
 
                 for (Map<String, Object> menuItem : menu) {
@@ -68,8 +72,7 @@ public class FoodDataRunner implements CommandLineRunner {
                     }
 
                     FoodEntity food = new FoodEntity();
-                    food.setFoodName(foodName);
-                    food.setFoodDesc(foodDesc);
+                    food.updateFoodNameAndFoodDesc(foodName, foodDesc);
 
                     try {
                         Long[] priceRange = parsePriceRange(priceString);
@@ -80,7 +83,7 @@ public class FoodDataRunner implements CommandLineRunner {
                         continue;
                     }
 
-                    food.setRestaurant(restaurant);
+                    food.updateRestaurant(restaurant);
                     foodRepository.save(food);
                 }
             }
@@ -90,19 +93,21 @@ public class FoodDataRunner implements CommandLineRunner {
         }
     }
 
+    // 해당 부분은 RestaurantEntity에 맞춰서 update 예정
     private RestaurantEntity saveRestaurant(Map<String, Object> restaurantData) {
         RestaurantEntity restaurant = new RestaurantEntity();
-        restaurant.setAddress((String) restaurantData.get("address_name"));
-        restaurant.setName((String) restaurantData.get("name"));
-        restaurant.setDistance(parseDouble(restaurantData.get("distance")));
-        restaurant.setKakaoUrl((String) restaurantData.get("kakao_url"));
-        restaurant.setNaverUrl((String) restaurantData.get("naver_url"));
-        restaurant.setPhone((String) restaurantData.get("phone"));
-        restaurant.setLongitude(parseDouble(restaurantData.get("x")));
-        restaurant.setLatitude(parseDouble(restaurantData.get("y")));
-        restaurant.setCategory((String) restaurantData.get("category"));
-        restaurant.setReviewCount(parseDouble(restaurantData.get("review_num")));
-        restaurant.setReviewScore(parseDouble(restaurantData.get("score")));
+        // restaurant 생성자 로직
+//        restaurant.setAddress((String) restaurantData.get("address_name"));
+//        restaurant.setName((String) restaurantData.get("name"));
+//        restaurant.setDistance(parseDouble(restaurantData.get("distance")));
+//        restaurant.setKakaoUrl((String) restaurantData.get("kakao_url"));
+//        restaurant.setNaverUrl((String) restaurantData.get("naver_url"));
+//        restaurant.setPhone((String) restaurantData.get("phone"));
+//        restaurant.setLongitude(parseDouble(restaurantData.get("x")));
+//        restaurant.setLatitude(parseDouble(restaurantData.get("y")));
+//        restaurant.setCategory((String) restaurantData.get("category"));
+//        restaurant.setReviewCount(parseDouble(restaurantData.get("review_num")));
+//        restaurant.setReviewScore(parseDouble(restaurantData.get("score")));
 
         // Address를 도로명 주소로 할 경우
         //        restaurant.setAddress((String) restaurantData.get("road_address_name"));

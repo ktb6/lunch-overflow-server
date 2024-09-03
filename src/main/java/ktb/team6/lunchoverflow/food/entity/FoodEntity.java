@@ -32,4 +32,14 @@ public class FoodEntity {
         this.maxPrice = maxPrice;
     }
 
+    public void updateFoodNameAndFoodDesc(String foodName, String foodDesc) {
+        this.foodName = foodName;
+        this.foodDesc = foodDesc;
+    }
+
+    public void updateRestaurant(RestaurantEntity restaurant) {
+        this.restaurant = restaurant;
+    }
+
+
 }
