@@ -1,4 +1,4 @@
-package ktb.team6.lunchoverflow.food.runner;
+package ktb.team6.lunchoverflow.domain.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,22 +6,22 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import ktb.team6.lunchoverflow.food.entity.FoodEntity;
-import ktb.team6.lunchoverflow.food.entity.RestaurantEntity;
-import ktb.team6.lunchoverflow.food.repository.FoodRepository;
-import ktb.team6.lunchoverflow.food.repository.RestaurantRepository;
-import lombok.AllArgsConstructor;
+import ktb.team6.lunchoverflow.domain.entity.FoodEntity;
+import ktb.team6.lunchoverflow.domain.entity.Restaurant;
+import ktb.team6.lunchoverflow.domain.repository.RestaurantRepository;
+import ktb.team6.lunchoverflow.domain.repository.FoodRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-@Component
-@AllArgsConstructor
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class FoodDataRunner implements CommandLineRunner {
 
-    private RestaurantRepository restaurantRepository;
-    private FoodRepository foodRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final FoodRepository foodRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -44,14 +44,14 @@ public class FoodDataRunner implements CommandLineRunner {
                     continue;
                 }
 
-                Optional<RestaurantEntity> restaurantOptional = restaurantRepository.findByName(restaurantName);
+                Optional<Restaurant> maybeRestaurant = restaurantRepository.findByName(restaurantName);
 
-                RestaurantEntity restaurant;
-                if (restaurantOptional.isEmpty()) {
+                Restaurant restaurant;
+                if (maybeRestaurant.isEmpty()) {
                     restaurant = saveRestaurant(restaurantData);
                 } else {
                     log.info("중복 레스토랑 존재, skip");
-                    restaurant = restaurantOptional.get();
+                    restaurant = maybeRestaurant.get();
                 }
 
                 for (Map<String, Object> menuItem : menu) {
@@ -66,7 +66,7 @@ public class FoodDataRunner implements CommandLineRunner {
                     }
 
                     // 음식 중복 체크
-                    if (foodRepository.existsByRestaurantAndFoodName(restaurant, foodName)) {
+                    if (foodRepository.existsByRestaurantAndName(restaurant, foodName)) {
                         log.info("Skipping duplicate food item: {} in restaurant: {}", foodName, restaurantName);
                         continue;
                     }
@@ -94,8 +94,8 @@ public class FoodDataRunner implements CommandLineRunner {
     }
 
     // 해당 부분은 RestaurantEntity에 맞춰서 update 예정
-    private RestaurantEntity saveRestaurant(Map<String, Object> restaurantData) {
-        RestaurantEntity restaurant = new RestaurantEntity();
+    private Restaurant saveRestaurant(Map<String, Object> restaurantData) {
+        Restaurant restaurant = new Restaurant();
         // restaurant 생성자 로직
 //        restaurant.setAddress((String) restaurantData.get("address_name"));
 //        restaurant.setName((String) restaurantData.get("name"));
@@ -143,5 +143,4 @@ public class FoodDataRunner implements CommandLineRunner {
         log.warn("예상치 못한 double 타입 값: {}", value);
         return 0.0;
     }
-
 }
