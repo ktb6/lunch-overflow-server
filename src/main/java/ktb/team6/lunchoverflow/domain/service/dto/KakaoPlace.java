@@ -24,5 +24,4 @@ public class KakaoPlace {
     private String placeUrl;
     @JsonProperty("distance")
     private Long distance;
-
 }
