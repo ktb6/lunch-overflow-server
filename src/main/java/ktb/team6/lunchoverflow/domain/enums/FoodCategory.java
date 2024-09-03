@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum Category {
+public enum FoodCategory {
     KOREAN("한식"),
     CHINESE("중식"),
     WESTERN("양식"),
