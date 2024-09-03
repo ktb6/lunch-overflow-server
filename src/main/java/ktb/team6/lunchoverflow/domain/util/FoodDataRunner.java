@@ -1,4 +1,4 @@
-package ktb.team6.lunchoverflow.food.runner;
+package ktb.team6.lunchoverflow.domain.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
