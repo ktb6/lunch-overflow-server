@@ -1,4 +1,4 @@
-package ktb.team6.lunchoverflow.food.entity;
+package ktb.team6.lunchoverflow.domain.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import ktb.team6.lunchoverflow.food.entity.RestaurantEntity;
 import lombok.Getter;
 
 @Entity

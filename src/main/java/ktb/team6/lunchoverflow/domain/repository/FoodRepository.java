@@ -1,6 +1,6 @@
-package ktb.team6.lunchoverflow.food.repository;
+package ktb.team6.lunchoverflow.domain.repository;
 
-import ktb.team6.lunchoverflow.food.entity.FoodEntity;
+import ktb.team6.lunchoverflow.domain.entity.FoodEntity;
 import ktb.team6.lunchoverflow.food.entity.RestaurantEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
