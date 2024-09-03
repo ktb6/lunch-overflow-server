@@ -1,5 +1,6 @@
 package ktb.team6.lunchoverflow.domain.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import ktb.team6.lunchoverflow.food.entity.RestaurantEntity;
 import lombok.Getter;
 
 @Entity
@@ -17,16 +17,20 @@ public class FoodEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "food_id")
     private Long id;
 
-    private String foodName;
-    private String foodDesc;
+    @Column(name = "food_name", nullable = false)
+    private String name;
+
+    @Column(name = "food_description")
+    private String description;
     private Long minPrice;
     private Long maxPrice;
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)
-    private RestaurantEntity restaurant;
+    private Restaurant restaurant;
 
     public void setPriceRange(Long minPrice, Long maxPrice) {
         this.minPrice = minPrice;
@@ -34,13 +38,11 @@ public class FoodEntity {
     }
 
     public void updateFoodNameAndFoodDesc(String foodName, String foodDesc) {
-        this.foodName = foodName;
-        this.foodDesc = foodDesc;
+        this.name = foodName;
+        this.description = foodDesc;
     }
 
-    public void updateRestaurant(RestaurantEntity restaurant) {
+    public void updateRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
-
-
 }
