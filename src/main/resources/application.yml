@@ -18,5 +18,5 @@ kakao:
     key: ${KAKAO_API_KEY}
 
   base:
-    x: 127.1069920
-    y: 37.4003784
+    x: ${BASE_PLACE_X}
+    y: ${BASE_PLACE_Y}
