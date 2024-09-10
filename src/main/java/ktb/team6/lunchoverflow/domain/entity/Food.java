@@ -8,12 +8,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "food")
-public class FoodEntity {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Food {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,14 +36,18 @@ public class FoodEntity {
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
-    public void setPriceRange(Long minPrice, Long maxPrice) {
+    @Builder
+    public Food(String name, String description, Long minPrice, Long maxPrice, Restaurant restaurant) {
+        this.name = name;
+        this.description = description;
         this.minPrice = minPrice;
         this.maxPrice = maxPrice;
+        this.restaurant = restaurant;
     }
 
-    public void updateFoodNameAndFoodDesc(String foodName, String foodDesc) {
-        this.name = foodName;
-        this.description = foodDesc;
+    public void updatePrices(Long minPrice, Long maxPrice) {
+        this.minPrice = minPrice;
+        this.maxPrice = maxPrice;
     }
 
     public void updateRestaurant(Restaurant restaurant) {
