@@ -12,3 +12,11 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+
+kakao:
+  api:
+    key: ${KAKAO_API_KEY}
+
+  base:
+    x: ${BASE_PLACE_X}
+    y: ${BASE_PLACE_Y}
