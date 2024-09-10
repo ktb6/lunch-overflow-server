@@ -41,17 +41,17 @@ public class KakaoApiService {
         URI uri = uriComponentsBuilder.queryParam("page", pageNumber).build().toUri();
         log.info("-------- url --------------- {}", uri);
 
-        kakaoClient.get()
-                .uri(uri)
-                .header("Authorization", "KakaoAK " + key)
-                .retrieve()
-                .bodyToMono(KakaoRestaurantResponse.class)
-                .flatMap(response -> {
-                    List<KakaoPlace> places = response.getDocuments();
-                    return Mono.fromRunnable(() -> restaurantRepository.saveAll(
-                            places.stream().map(Restaurant::from).toList()));
-                })
-                .subscribe();
+//        kakaoClient.get()
+//                .uri(uri)
+//                .header("Authorization", "KakaoAK " + key)
+//                .retrieve()
+//                .bodyToMono(KakaoRestaurantResponse.class)
+//                .flatMap(response -> {
+//                    List<KakaoPlace> places = response.getDocuments();
+//                    return Mono.fromRunnable(() -> restaurantRepository.saveAll(
+//                            places.stream().map(Restaurant::from).toList()));
+//                })
+//                .subscribe();
     }
 
     @Transactional
@@ -62,18 +62,18 @@ public class KakaoApiService {
                 .queryParam("page", pageNumber)
                 .build().toUri();
 
-        kakaoClient.get()
-                .uri(uri)
-                .header("Authorization", "KakaoAK " + key)
-                .retrieve()
-                .bodyToMono(KakaoRestaurantResponse.class)
-                .flatMap(response -> {
-                    List<KakaoPlace> places = response.getDocuments();
-                    log.info("places.size(): {}", places.size());
-                    return Mono.fromRunnable(() -> restaurantRepository.saveAll(
-                            places.stream().map(Restaurant::from).toList()));
-                })
-                .subscribe();
+//        kakaoClient.get()
+//                .uri(uri)
+//                .header("Authorization", "KakaoAK " + key)
+//                .retrieve()
+//                .bodyToMono(KakaoRestaurantResponse.class)
+//                .flatMap(response -> {
+//                    List<KakaoPlace> places = response.getDocuments();
+//                    log.info("places.size(): {}", places.size());
+//                    return Mono.fromRunnable(() -> restaurantRepository.saveAll(
+//                            places.stream().map(Restaurant::from).toList()));
+//                })
+//                .subscribe();
     }
 
     private UriComponentsBuilder getDefaultUriBuilder(String url) {
